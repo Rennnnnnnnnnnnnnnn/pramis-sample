@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import useHabits from "../hooks/useHabits";
+import { DndContext, closestCenter, } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy, arrayMove, } from "@dnd-kit/sortable";
+import SortableHabit from "../components/SortableHabit";
 
 function Calendar({ user }) {
 
@@ -21,6 +24,30 @@ function Calendar({ user }) {
         setFrequency("daily");
         setColor("#22c55e");
         setShowModal(false);
+    };
+
+
+    const handleDragEnd = async ({ active, over }) => {
+
+        if (!over || active.id === over.id) {
+            return;
+        }
+
+        const oldIndex = habits.findIndex(
+            (habit) => habit.habit_id === active.id
+        );
+
+        const newIndex = habits.findIndex(
+            (habit) => habit.habit_id === over.id
+        );
+
+        const newHabits = arrayMove(
+            habits,
+            oldIndex,
+            newIndex
+        );
+
+        await reorderHabits(newHabits);
     };
 
     const closeModal = () => {
@@ -50,7 +77,7 @@ function Calendar({ user }) {
     const handleEditSave = async () => {
         if (!newHabit.trim()) return;
 
-        await editHabitSave(editingHabit.id, {
+        await editHabitSave(editingHabit.habit_id, {
             name: newHabit,
             frequency,
             color,
@@ -62,7 +89,7 @@ function Calendar({ user }) {
     const handleDeleteHabit = async () => {
         if (!habitToDelete) return;
 
-        await deleteHabit(habitToDelete.id);
+        await deleteHabit(habitToDelete.habit_id);
 
         setHabitToDelete(null);
     };
@@ -76,6 +103,7 @@ function Calendar({ user }) {
         addHabit,
         editHabitSave,
         deleteHabit,
+        reorderHabits,
     } = useHabits(user);
 
     const today = new Date();
@@ -146,23 +174,17 @@ function Calendar({ user }) {
 
     const getCompletedCount = (habit) => {
         return days.filter(
-            (day) => completed[`${habit.id}-${day}`]
+            (day) => completed[`${habit.habit_id}-${day}`]
         ).length;
     };
 
     // =========================
     // SCROLL
-    const wasLoading = useRef(false);
-
     useEffect(() => {
-        if (habitsLoading) {
-            wasLoading.current = true;
-            return;
-        }
-        // Only scroll after a fetch has actually finished
-        if (!wasLoading.current) return;
-        wasLoading.current = false;
+        if (user && habitsLoading) return;
+
         if (!todayRef.current || !calendarRef.current) return;
+
         if (window.innerWidth < 1024) {
             todayRef.current.scrollIntoView({
                 behavior: "smooth",
@@ -170,7 +192,7 @@ function Calendar({ user }) {
                 inline: "center",
             });
         }
-    }, [habitsLoading, daysInMonth]);
+    }, [user, habitsLoading, daysInMonth]);
 
     return (
         <div className="min-h-screen bg-maomao-night p-3 sm:p-5 lg:p-8 text-[#f2ead8]">
@@ -182,7 +204,7 @@ function Calendar({ user }) {
                     </h1>
                 </div>
                 {/* CALENDAR */}
-                <div className="flex flex-col gap-15 lg:flex-row">
+                <div className="flex flex-col gap-8 lg:gap-25 lg:flex-row">
                     {/* PROMISES SIDEBAR */}
                     <div className="w-full space-y-3 lg:w-auto lg:shrink-0">
                         <div className="flex items-center justify-between">
@@ -204,49 +226,27 @@ function Calendar({ user }) {
                             </button>
                         </div>
 
-                        {habits.map((habit) => (
-                            <div
-                                key={habit.id}
-                                className="flex w-full items-center justify-between "
+                        <DndContext
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext
+                                items={habits.map((habit) => habit.habit_id)}
+                                strategy={verticalListSortingStrategy}
                             >
-                                {/* HABIT INFO */}
-                                <div className="flex min-w-0 items-center gap-2">
-                                    <span
-                                        className="h-3 w-3 shrink-0 rounded-full "
-                                        style={{
-                                            backgroundColor: habit.color,
-                                        }}
-                                    />
-
-                                    <div className="min-w-0">
-                                        <div className="truncate text-sm font-medium text-[#e8dcc2]">
-                                            {habit.name}
-                                        </div>
-
-                                        <div className="text-xs text-[#829b7d]">
-                                            {habit.frequency}
-                                        </div>
-                                    </div>
+                                <div className="space-y-3">
+                                    {habits.map((habit) => (
+                                        <SortableHabit
+                                            key={habit.habit_id}
+                                            habit={habit}
+                                            onEdit={handleEditHabit}
+                                            onDelete={setHabitToDelete}
+                                        />
+                                    ))}
                                 </div>
 
-                                {/* EDIT / DELETE */}
-                                <div className="flex shrink-0 gap-1">
-                                    <button
-                                        onClick={() => handleEditHabit(habit)}
-                                        className="rounded px-1 text-blue-400 hover:text-blue-300"
-                                    >
-                                        ✏️
-                                    </button>
-
-                                    <button
-                                        onClick={() => setHabitToDelete(habit)}
-                                        className="rounded px-1 text-red-400 hover:text-red-300"
-                                    >
-                                        🗑
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            </SortableContext>
+                        </DndContext>
                     </div>
                     {/* CALENDAR GRID */}
                     <div
@@ -294,7 +294,7 @@ function Calendar({ user }) {
                         <div className="space-y-6 pb-5">
                             {habits.map((habit) => (
                                 <div
-                                    key={habit.id}
+                                    key={habit.habit_id}
                                     className="grid items-center gap-3"
                                     style={{
                                         gridTemplateColumns:
@@ -311,7 +311,7 @@ function Calendar({ user }) {
                                             );
                                         }
 
-                                        const key = `${habit.id}-${day}`;
+                                        const key = `${habit.habit_id}-${day}`;
                                         const checked = completed[key];
                                         return (
                                             <label key={day}>
@@ -358,13 +358,10 @@ function Calendar({ user }) {
 
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-
                     <div className="mt-6 w-80 rounded-xl border border-[#344d3b] bg-black/50 p-4 shadow-xl">
-
                         <h3 className="mb-3 text-center text-sm font-bold text-[#f5e8c8]">
                             {editingHabit ? "Edit Promise" : "New Promise"}
                         </h3>
-
                         {/* NAME */}
                         <label className="mb-2 block text-sm text-[#b6c8a5]">
                             Promise Name
@@ -378,7 +375,6 @@ function Calendar({ user }) {
                             className="mb-3 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none hover:border-[#89ad76] focus:border-green-500"
                             autoFocus
                         />
-
                         {/* FREQUENCY */}
                         <div className="mb-4">
                             <label className="mb-2 block text-sm text-[#b6c8a5]">

@@ -7,25 +7,24 @@ export default function useHabits(user) {
     // DEFAULT HABITS
     const defaultHabits = [
         {
-            id: 1,
+            habit_id: 1,
             name: "Make my bed",
             frequency: "daily",
             color: "#3b82f6",
         },
         {
-            id: 2,
+            habit_id: 2,
             name: "Read a book",
             frequency: "weekdays",
             color: "#e61010",
         },
         {
-            id: 3,
+            habit_id: 3,
             name: "Go for a walk",
             frequency: "weekends",
             color: "#22c55e",
         },
     ];
-
 
     // ================================
     // LOAD GUEST DATA
@@ -48,11 +47,8 @@ export default function useHabits(user) {
     const getGuestLogs = () => {
         const saved = localStorage.getItem("guestHabitLogs");
 
-        return saved
-            ? JSON.parse(saved)
-            : {};
+        return saved ? JSON.parse(saved) : {};
     };
-
 
     // ================================
     // STATE
@@ -69,8 +65,6 @@ export default function useHabits(user) {
 
     const [habitsLoading, setHabitsLoading] = useState(!!user);
     const [logsLoading, setLogsLoading] = useState(false);
-
-
     // ================================
     // SYNC GUEST DATA
     useEffect(() => {
@@ -152,7 +146,6 @@ export default function useHabits(user) {
 
     // ================================
     // LOAD USER DATA
-
     useEffect(() => {
 
         if (!user) return;
@@ -171,13 +164,12 @@ export default function useHabits(user) {
 
     // ================================
     // TOGGLE DAY
-
     const toggleDay = async (habit, day) => {
 
         const today = new Date();
 
         const key =
-            `${habit.id}-${day}`;
+            `${habit.habit_id}-${day}`;
 
         const checked =
             completed[key];
@@ -185,7 +177,6 @@ export default function useHabits(user) {
 
         // ============================
         // GUEST
-
         if (!user) {
 
             setCompleted((prev) => {
@@ -215,11 +206,8 @@ export default function useHabits(user) {
             return;
 
         }
-
-
         // ============================
         // USER
-
         try {
 
             const date =
@@ -236,7 +224,7 @@ export default function useHabits(user) {
                 await api.post(
                     "/api/habit-logs",
                     {
-                        habitId: habit.id,
+                        habitId: habit.habit_id,
                         date,
                     }
                 );
@@ -247,7 +235,7 @@ export default function useHabits(user) {
                     "/api/habit-logs",
                     {
                         data: {
-                            habitId: habit.id,
+                            habitId: habit.habit_id,
                             date,
                         },
                     }
@@ -272,20 +260,16 @@ export default function useHabits(user) {
 
     // ================================
     // ADD HABIT
-
     const addHabit = async (habitData) => {
-
         try {
-
             // ============================
             // GUEST
-
             if (!user) {
 
                 setHabits((prev) => {
 
                     const newHabit = {
-                        id: Date.now(),
+                        habit_id: Date.now(),
                         ...habitData,
                     };
 
@@ -295,21 +279,16 @@ export default function useHabits(user) {
                         newHabit,
                     ];
 
-
                     // SAVE
-
                     localStorage.setItem(
                         "guestHabits",
                         JSON.stringify(updated)
                     );
 
-
                     // SYNC
-
                     window.dispatchEvent(
                         new Event("guestHabitsUpdated")
                     );
-
 
                     return updated;
 
@@ -363,7 +342,7 @@ export default function useHabits(user) {
 
                     const updated =
                         prev.map((habit) =>
-                            habit.id === id
+                            habit.habit_id === id
                                 ? {
                                     ...habit,
                                     ...habitData,
@@ -404,7 +383,7 @@ export default function useHabits(user) {
 
             setHabits((prev) =>
                 prev.map((habit) =>
-                    habit.id === id
+                    habit.habit_id === id
                         ? response.data.habit
                         : habit
                 )
@@ -436,7 +415,7 @@ export default function useHabits(user) {
                     const updated =
                         prev.filter(
                             (habit) =>
-                                habit.id !== id
+                                habit.habit_id !== id
                         );
 
 
@@ -508,7 +487,7 @@ export default function useHabits(user) {
             setHabits((prev) =>
                 prev.filter(
                     (habit) =>
-                        habit.id !== id
+                        habit.habit_id !== id
                 )
             );
 
@@ -588,6 +567,68 @@ export default function useHabits(user) {
     };
 
 
+
+    // ================================
+    // REORDER HABITS
+
+    const reorderHabits = async (newHabits) => {
+
+        // ============================
+        // GUEST
+
+        if (!user) {
+
+            setHabits(newHabits);
+
+            localStorage.setItem(
+                "guestHabits",
+                JSON.stringify(newHabits)
+            );
+
+            window.dispatchEvent(
+                new Event("guestHabitsUpdated")
+            );
+
+            return;
+        }
+
+
+        // ============================
+        // USER
+
+        try {
+
+            // Update UI immediately
+            setHabits(newHabits);
+
+            await api.put(
+                "/api/habits/reorder",
+                {
+                    habits: newHabits.map((habit) => ({
+                        id: habit.habit_id
+                    }))
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Failed to reorder habits:",
+                error
+            );
+
+            // Reload database order if request fails
+            await getHabits();
+
+        }
+
+    };
+
+
+
+
+
+
     // ================================
     // RETURN
 
@@ -601,6 +642,7 @@ export default function useHabits(user) {
         addHabit,
         editHabitSave,
         deleteHabit,
+        reorderHabits,
     };
 
 }

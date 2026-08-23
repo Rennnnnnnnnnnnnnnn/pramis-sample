@@ -56,7 +56,7 @@ export const getHabits = async (req, res) => {
             SELECT *
             FROM habits
             WHERE user_id = $1
-            ORDER BY created_at ASC
+            ORDER BY sort_order ASC;
             `,
             [user_id]
         );
@@ -97,7 +97,7 @@ export const updateHabit = async (req, res) => {
                 name = $1,
                 color = $2,
                 frequency = $3
-            WHERE id = $4
+            WHERE habit_id = $4
             RETURNING *
             `,
             [
@@ -141,7 +141,7 @@ export const deleteHabit = async (req, res) => {
         const result = await db.query(
             `
             DELETE FROM habits
-            WHERE id = $1
+            WHERE habit_id = $1
             RETURNING *
             `,
             [id]
@@ -154,6 +154,35 @@ export const deleteHabit = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
+    }
+};
+
+// SORT HABITS
+export const reorderHabits = async (req, res) => {
+    try {
+        const { habits } = req.body;
+
+        for (let i = 0; i < habits.length; i++) {
+            await db.query(
+                `
+                UPDATE habits
+                SET sort_order = $1
+                WHERE habit_id = $2
+                `,
+                [i, habits[i].id]
+            );
+        }
+
+        res.json({
+            message: "Habits reordered successfully."
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Failed to reorder habits."
+        });
     }
 };
 

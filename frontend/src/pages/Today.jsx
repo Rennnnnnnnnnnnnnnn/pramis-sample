@@ -46,31 +46,27 @@ function Today({ user }) {
 
     const incompleteHabits = todayHabits.filter(
         (habit) =>
-            !completed[`${habit.id}-${currentDay}`]
+            !completed[`${habit.habit_id}-${currentDay}`]
     );
 
     const completedHabits = todayHabits.filter(
         (habit) =>
-            completed[`${habit.id}-${currentDay}`]
+            completed[`${habit.habit_id}-${currentDay}`]
     );
-
 
     const completedToday = completedHabits.length;
 
-
     // ================================
     // HABIT ROW
-    // ================================
-
     const renderHabit = (habit) => {
 
-        const key = `${habit.id}-${currentDay}`;
+        const key = `${habit.habit_id}-${currentDay}`;
         const checked = completed[key];
 
         return (
             <label
-                key={habit.id}
-                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-3 transition hover:bg-[#263b2b]"
+                key={habit.habit_id}
+                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1 transition hover:bg-[#263b2b]"
             >
 
                 <input
@@ -111,11 +107,10 @@ function Today({ user }) {
                 <div className="min-w-0 flex-1">
 
                     <div
-                        className={`text-sm font-medium ${
-                            checked
+                        className={`text-sm font-medium ${checked
                                 ? "text-[#829b7d] line-through"
                                 : "text-[#e8dcc2]"
-                        }`}
+                            }`}
                     >
                         {habit.name}
                     </div>
@@ -179,11 +174,10 @@ function Today({ user }) {
                         onClick={() =>
                             setActiveTab("today")
                         }
-                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
-                            activeTab === "today"
+                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${activeTab === "today"
                                 ? "bg-[#7fa36a] text-[#f5e8c8]"
                                 : "text-[#b6c8a5] hover:bg-[#263b2b]"
-                        }`}
+                            }`}
                     >
                         Today
                         <span className="ml-2 text-xs">
@@ -196,11 +190,10 @@ function Today({ user }) {
                         onClick={() =>
                             setActiveTab("completed")
                         }
-                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
-                            activeTab === "completed"
+                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${activeTab === "completed"
                                 ? "bg-[#7fa36a] text-[#f5e8c8]"
                                 : "text-[#b6c8a5] hover:bg-[#263b2b]"
-                        }`}
+                            }`}
                     >
                         Completed
                         <span className="ml-2 text-xs">

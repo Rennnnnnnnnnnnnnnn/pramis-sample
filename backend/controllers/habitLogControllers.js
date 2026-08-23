@@ -81,7 +81,7 @@ export const getHabitLogs = async (req, res) => {
                 hl.completed_date
             FROM habit_logs hl
             JOIN habits h
-                ON h.id = hl.habit_id
+                ON h.habit_id = hl.habit_id
             WHERE h.user_id = $1
             `,
             [user_id]
