@@ -38,7 +38,7 @@ function AuthModal({ onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/50 p-4">
       <div className="w-full max-w-sm rounded-xl border border-[#344d3b] bg-[#22352a] p-5 shadow-xl">
         <div className="relative mb-4">
           <h3 className="text-center text-lg font-bold text-[#f5e8c8]">
