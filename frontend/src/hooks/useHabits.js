@@ -105,8 +105,7 @@ export default function useHabits(user) {
         try {
             setHabitsLoading(true);
 
-            const response =
-                await api.get("/api/habits");
+            const response = await api.get("/api/habits");
 
             setHabits(response.data);
         } catch (error) {
@@ -143,11 +142,9 @@ export default function useHabits(user) {
 
     };
 
-
     // ================================
     // LOAD USER DATA
     useEffect(() => {
-
         if (!user) return;
 
         const loadData = async () => {
@@ -156,9 +153,7 @@ export default function useHabits(user) {
             await getHabitLogs();
 
         };
-
         loadData();
-
     }, [user]);
 
 
@@ -173,7 +168,6 @@ export default function useHabits(user) {
 
         const checked =
             completed[key];
-
 
         // ============================
         // GUEST
@@ -197,16 +191,11 @@ export default function useHabits(user) {
                 window.dispatchEvent(
                     new Event("guestHabitsUpdated")
                 );
-
-
                 return updated;
-
             });
-
             return;
-
         }
-        // ============================
+        
         // USER
         try {
 
@@ -265,14 +254,11 @@ export default function useHabits(user) {
             // ============================
             // GUEST
             if (!user) {
-
                 setHabits((prev) => {
-
                     const newHabit = {
                         habit_id: Date.now(),
                         ...habitData,
                     };
-
 
                     const updated = [
                         ...prev,
@@ -291,22 +277,15 @@ export default function useHabits(user) {
                     );
 
                     return updated;
-
                 });
-
                 return;
-
             }
-
 
             // ============================
             // USER
-
-            const response =
-                await api.post(
-                    "/api/habits",
-                    habitData
-                );
+            const response = await api.post("/api/habits",
+                habitData
+            );
 
 
             setHabits((prev) => [

@@ -6,6 +6,7 @@ import db from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import habitRoutes from "./routes/habitRoutes.js";
 import habitLogRoutes from "./routes/habitLogRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 // Middlewares
 import loggerHandling from "./middlewares/loggerHandling.js";
@@ -18,7 +19,10 @@ const PORT = 3000;
 
 // Global Middlewares
 app.use(cors({
-    origin: "http://localhost:5173",
+  origin: process.env.CORS_ORIGIN,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
 app.use(express.json());
@@ -28,34 +32,7 @@ app.use(loggerHandling);
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", authenticate, habitRoutes);
 app.use("/api/habit-logs", authenticate, habitLogRoutes);
-
-// TEST ROUTE
-app.get('/test-db', async (req, res) => {
-    try {
-        const username = "qwe";
-
-        const result = await db.query(
-            "SELECT id FROM users WHERE username = $1",
-            [username]
-        );
-
-        console.log("Query result:", result.rows);
-
-        res.json(result.rows);
-
-    } catch (error) {
-        console.error("DB TEST ERROR:", error);
-        res.status(500).json({
-            error: error.message,
-            stack: error.stack
-        });
-    }
-});
-
-
-
-
-
+app.use("/api/tasks", authenticate, taskRoutes);
 
 
 // 404 Handler (must come after routes)

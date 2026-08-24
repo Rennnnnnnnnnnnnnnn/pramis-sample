@@ -12,7 +12,6 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // ================================
   // AUTHENTICATION
   const handleAuthSuccess = async (data) => {
     try {
@@ -56,7 +55,6 @@ function App() {
     }
   };
 
-  // ================================
   // RESTORE LOGIN SESSION
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -70,10 +68,7 @@ function App() {
     setAuthLoading(false);
   }, []);
 
-
-  if (authLoading) {
-    return null;
-  }
+  if (authLoading) { return null; }
 
   return (
     <BrowserRouter>
@@ -94,24 +89,16 @@ function App() {
         />
 
         <Routes>
-          <Route
-            path="/calendar" element={
-              <Calendar
-                user={user}
-              />
-            }
+          <Route path="/calendar"
+            element={<Calendar user={user} />}
           />
 
-          <Route
-            path="/" element={
-              <Today
-                user={user}
-              />
-            }
+          <Route path="/"
+            element={<Today user={user} />}
           />
 
-          <Route
-            path="/profile" element={
+          <Route path="/profile"
+            element={
               <Profile
                 user={user}
                 onOpenAuth={() => setShowAuthModal(true)}
@@ -130,6 +117,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
 
 export default App;

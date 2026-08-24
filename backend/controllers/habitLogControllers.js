@@ -73,7 +73,6 @@ export const uncheckHabit = async (req, res) => {
 export const getHabitLogs = async (req, res) => {
     try {
         const user_id = req.user.user_id;
-        console.log('asdasd ', user_id)
         const result = await db.query(
             `
             SELECT
