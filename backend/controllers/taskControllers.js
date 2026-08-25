@@ -68,8 +68,6 @@ export const deleteTask = async (req, res) => {
     try {
         const user_id = req.user.user_id;
         const { task_id } = req.params;
-        console.log(req.params, "asdasd")
-
         const result = await db.query(
             `
             DELETE FROM tasks

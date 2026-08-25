@@ -13,10 +13,7 @@ function Calendar({ user }) {
     const [frequency, setFrequency] = useState("daily");
     const [color, setColor] = useState("#22c55e");
 
-    const getRandomColor = () =>
-        `#${Math.floor(Math.random() * 16777215)
-            .toString(16)
-            .padStart(6, "0")}`;
+    const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
 
     const resetHabitForm = () => {
         setEditingHabit(null);
@@ -26,9 +23,7 @@ function Calendar({ user }) {
         setShowModal(false);
     };
 
-
     const handleDragEnd = async ({ active, over }) => {
-
         if (!over || active.id === over.id) {
             return;
         }
@@ -56,13 +51,11 @@ function Calendar({ user }) {
 
     const handleAddHabit = async () => {
         if (!newHabit.trim()) return;
-
         await addHabit({
             name: newHabit,
             frequency,
             color,
         });
-
         resetHabitForm();
     };
 
@@ -195,7 +188,7 @@ function Calendar({ user }) {
     }, [user, habitsLoading, daysInMonth]);
 
     return (
-        <div className="min-h-screen bg-maomao-night p-3 sm:p-5 lg:p-8 text-[#f2ead8]">
+        <div className="min-h-full bg-maomao-night p-3 sm:p-5 lg:p-8 text-[#f2ead8]">
             <div className="rounded-xl border border-maomao-dark-border bg-maomao-forest p-6 shadow-lg">
                 {/* HEADER */}
                 <div className="mb-6 flex items-center justify-between">

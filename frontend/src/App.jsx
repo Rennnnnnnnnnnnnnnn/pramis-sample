@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import AuthModal from "./components/AuthModal";
 import api from "./services/api";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,6 +17,7 @@ function App() {
   const handleAuthSuccess = async (data) => {
     try {
       let response;
+
       // SIGN IN
       if (data.mode === "signin") {
         response = await api.post(
@@ -26,32 +28,45 @@ function App() {
           }
         );
 
+        const { token, user } = response.data;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setUser(user);
+        setShowAuthModal(false);
+
+        return {
+          success: true,
+        };
       }
+
       // REGISTER
-      else {
-        response = await api.post(
-          "/api/auth/register",
-          {
-            username: data.username,
-            email: data.email,
-            password: data.password,
-          }
-        );
-      }
+      response = await api.post(
+        "/api/auth/register",
+        {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        }
+      );
 
-      // ============================
-      // SAVE AUTHENTICATION
-      const { token, user } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      return {
+        success: true,
+      };
 
-      setUser(user);
-      setShowAuthModal(false);
     } catch (error) {
       console.error(
         "Authentication failed:",
         error.response?.data || error
       );
+
+      return {
+        success: false,
+        message:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      };
     }
   };
 
@@ -100,7 +115,7 @@ function App() {
           <Route path="/profile"
             element={
               <Profile
-                user={user}
+                // user={user}
                 onOpenAuth={() => setShowAuthModal(true)}
               />
             }

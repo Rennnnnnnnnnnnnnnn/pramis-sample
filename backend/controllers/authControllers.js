@@ -2,10 +2,8 @@ import bcrypt from "bcrypt";
 import db from "../config/db.js";
 import jwt from "jsonwebtoken";
 
+// REGISTER
 export const register = async (req, res) => {
-
-    console.log("badi", req.body);
-
     try {
         const { username, email, password } = req.body;
 
@@ -35,7 +33,6 @@ export const register = async (req, res) => {
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
-
         const result = await db.query(
             `
             INSERT INTO users(username, email, password_hash)
@@ -59,6 +56,7 @@ export const register = async (req, res) => {
     }
 };
 
+//  LOGIN
 export const login = async (req, res) => {
     try {
         const { identifier, password } = req.body;
@@ -78,7 +76,7 @@ export const login = async (req, res) => {
 
         if (result.rows.length === 0) {
             return res.status(401).json({
-                message: "Invalid username/email or password.",
+                message: "Invalid credentials",
             });
         }
 
@@ -118,9 +116,7 @@ export const login = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
-        res.status(500).json({
-            message: "Internal server error.",
-        });
+        res.status(500).json({ message: "Internal server error.", });
     }
 };
+

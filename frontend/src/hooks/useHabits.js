@@ -3,7 +3,6 @@ import api from "../services/api.js";
 
 export default function useHabits(user) {
 
-    // ================================
     // DEFAULT HABITS
     const defaultHabits = [
         {
@@ -26,27 +25,21 @@ export default function useHabits(user) {
         },
     ];
 
-    // ================================
     // LOAD GUEST DATA
     const getGuestHabits = () => {
         const saved = localStorage.getItem("guestHabits");
-
         if (saved) {
             return JSON.parse(saved);
         }
-
-        // First time guest
         localStorage.setItem(
             "guestHabits",
             JSON.stringify(defaultHabits)
         );
-
         return defaultHabits;
     };
 
     const getGuestLogs = () => {
         const saved = localStorage.getItem("guestHabitLogs");
-
         return saved ? JSON.parse(saved) : {};
     };
 
@@ -61,7 +54,6 @@ export default function useHabits(user) {
         if (user) return {};
         return getGuestLogs();
     });
-
 
     const [habitsLoading, setHabitsLoading] = useState(!!user);
     const [logsLoading, setLogsLoading] = useState(false);
@@ -98,7 +90,6 @@ export default function useHabits(user) {
         };
     }, [user]);
 
-
     // ================================
     // GET HABITS
     const getHabits = async () => {
@@ -114,7 +105,6 @@ export default function useHabits(user) {
             setHabitsLoading(false);
         }
     };
-
 
     // ================================
     // GET HABIT LOGS
@@ -156,7 +146,6 @@ export default function useHabits(user) {
         loadData();
     }, [user]);
 
-
     // ================================
     // TOGGLE DAY
     const toggleDay = async (habit, day) => {
@@ -195,7 +184,7 @@ export default function useHabits(user) {
             });
             return;
         }
-        
+
         // USER
         try {
 
@@ -246,12 +235,9 @@ export default function useHabits(user) {
 
     };
 
-
-    // ================================
     // ADD HABIT
     const addHabit = async (habitData) => {
         try {
-            // ============================
             // GUEST
             if (!user) {
                 setHabits((prev) => {
@@ -280,13 +266,10 @@ export default function useHabits(user) {
                 });
                 return;
             }
-
-            // ============================
             // USER
             const response = await api.post("/api/habits",
                 habitData
             );
-
 
             setHabits((prev) => [
                 ...prev,
@@ -294,31 +277,17 @@ export default function useHabits(user) {
             ]);
 
         } catch (error) {
-
             console.error(error);
-
         }
-
     };
-
 
     // ================================
     // EDIT HABIT
-
-    const editHabitSave = async (
-        id,
-        habitData
-    ) => {
-
+    const editHabitSave = async (id, habitData) => {
         try {
-
-            // ============================
             // GUEST
-
             if (!user) {
-
                 setHabits((prev) => {
-
                     const updated =
                         prev.map((habit) =>
                             habit.habit_id === id
@@ -328,58 +297,32 @@ export default function useHabits(user) {
                                 }
                                 : habit
                         );
-
-
                     localStorage.setItem(
                         "guestHabits",
                         JSON.stringify(updated)
                     );
-
-
-                    window.dispatchEvent(
-                        new Event("guestHabitsUpdated")
-                    );
-
-
+                    window.dispatchEvent(new Event("guestHabitsUpdated"));
                     return updated;
-
                 });
-
                 return;
-
             }
 
-
-            // ============================
             // USER
-
-            const response =
-                await api.put(
-                    `/api/habits/${id}`,
-                    habitData
-                );
-
+            const response = await api.put(`/api/habits/${id}`, habitData);
 
             setHabits((prev) =>
                 prev.map((habit) =>
                     habit.habit_id === id
                         ? response.data.habit
                         : habit
-                )
-            );
-
+                ));
         } catch (error) {
-
             console.error(error);
-
         }
-
     };
-
 
     // ================================
     // DELETE HABIT
-
     const deleteHabit = async (id) => {
 
         try {

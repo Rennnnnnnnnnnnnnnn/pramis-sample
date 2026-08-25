@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import habitRoutes from "./routes/habitRoutes.js";
 import habitLogRoutes from "./routes/habitLogRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import accountRoutes from "./routes/accountRoutes.js"
 
 // Middlewares
 import loggerHandling from "./middlewares/loggerHandling.js";
@@ -19,10 +20,7 @@ const PORT = 3000;
 
 // Global Middlewares
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+    origin: "http://localhost:5173",
 }));
 
 app.use(express.json());
@@ -33,7 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/habits", authenticate, habitRoutes);
 app.use("/api/habit-logs", authenticate, habitLogRoutes);
 app.use("/api/tasks", authenticate, taskRoutes);
-
+app.use("/api/account", authenticate, accountRoutes);
 
 // 404 Handler (must come after routes)
 app.use(notFoundHandling);
@@ -44,15 +42,12 @@ app.use(errorHandling);
 async function testDbConnection() {
     try {
         console.log("Testing database connection...");
-
         const result = await db.query("SELECT NOW()");
-
         console.log("PostgreSQL connection successful!");
         console.log(result.rows[0]);
     } catch (err) {
         console.error("Database connection failed!");
         console.error(err);
-
         process.exit(1);
     }
 }

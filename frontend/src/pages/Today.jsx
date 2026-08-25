@@ -61,7 +61,7 @@ function Today({ user }) {
     const completedToday = completedHabits.length;
 
     // TASKS
-        // =========================================================
+    // =========================================================
     const sortedTasks = [...tasks].sort((a, b) => {
         // Both incomplete
         if (!a.completed && !b.completed) {
@@ -87,7 +87,7 @@ function Today({ user }) {
     );
 
     // HABIT ROW
-        // =========================================================
+    // =========================================================
     const renderHabit = (habit) => {
 
         const key = `${habit.habit_id}-${currentDay}`;
@@ -245,7 +245,7 @@ function Today({ user }) {
     };
 
     return (
-        <div className="min-h-screen bg-maomao-night p-3 text-[#f2ead8] sm:p-5 lg:p-8">
+        <div className="min-h-full bg-maomao-night p-3 text-[#f2ead8] sm:p-5 lg:p-8">
             <div className="rounded-xl border border-maomao-dark-border bg-maomao-forest p-6 shadow-lg">
                 {/* HEADER */}
                 <div className="mb-4 rounded-xl border border-[#344d3b] bg-[#1d3024] p-4">
@@ -269,12 +269,12 @@ function Today({ user }) {
                 </div>
 
                 {/* TABS */}
-                <div className="mb-4 flex rounded-lg bg-[#1d3024] p-1">
+                <div className="mb-4 flex rounded-lg bg-[#1d3024]">
                     <button
                         onClick={() =>
                             setActiveTab("today")
                         }
-                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${activeTab === "today"
+                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition cursor-pointer ${activeTab === "today"
                             ? "bg-[#7fa36a] text-[#f5e8c8]"
                             : "text-[#b6c8a5] hover:bg-[#263b2b]"
                             }`}
@@ -289,7 +289,7 @@ function Today({ user }) {
                         onClick={() =>
                             setActiveTab("completed")
                         }
-                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${activeTab === "completed"
+                        className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition cursor-pointer ${activeTab === "completed"
                             ? "bg-[#7fa36a] text-[#f5e8c8]"
                             : "text-[#b6c8a5] hover:bg-[#263b2b]"
                             }`}
@@ -320,9 +320,7 @@ function Today({ user }) {
                                 {incompleteHabits.length === 0 && (
                                     <div className="py-10 text-center">
                                         <p className="text-sm text-[#829b7d]">
-                                            {todayHabits.length === 0
-                                                ? "No activities scheduled for today."
-                                                : "All promises completed!"}
+                                            {todayHabits.length === 0 ? "No activities scheduled for today." : "All promises completed!"}
                                         </p>
                                     </div>
                                 )}

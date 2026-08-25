@@ -4,7 +4,7 @@ import api from "../services/api";
 const defaultTasks = [
     {
         task_id: 1,
-        task_name: "Clean garage",
+        task_name: "Clean my room",
         completed: false,
     },
     {

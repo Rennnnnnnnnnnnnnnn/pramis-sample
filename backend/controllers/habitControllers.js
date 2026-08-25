@@ -78,7 +78,7 @@ export const getHabits = async (req, res) => {
 
 // UPDATE HABIT
 export const updateHabit = async (req, res) => {
-
+    console.log("UPDATE HABIT BODY:", req.body);
     try {
 
         const { id } = req.params;

@@ -3,7 +3,6 @@ import { createHabit, deleteHabit, getHabits, reorderHabits, updateHabit } from 
 
 const router = express.Router();
 
-
 router.put("/reorder", reorderHabits);
 router.post("/", createHabit);
 router.get("/", getHabits);
