@@ -62,7 +62,7 @@ function AuthModal({ onClose, onSubmit }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/50 p-4">
-      <div className="w-full max-w-sm rounded-xl border border-[#344d3b] bg-[#22352a] p-5 shadow-xl">
+      <div className="w-full max-w-sm rounded-xl border border-app-border bg-app-surface p-5 shadow-xl">
         {/* SUCCESS MESSAGE */}
         {mode === "success" ? (
           <>
@@ -71,29 +71,29 @@ function AuthModal({ onClose, onSubmit }) {
                 ✓
               </div>
 
-              <h3 className="mb-2 text-lg font-bold text-[#f5e8c8]">
+              <h3 className="mb-2 text-lg font-bold text-app-text">
                 Registration Successful
               </h3>
 
-              <p className="text-sm text-[#b6c8a5]">
+              <p className="text-sm text-app-text-muted">
                 Your account has been created successfully.
               </p>
 
-              <p className="mt-1 text-sm text-[#b6c8a5]">
+              <p className="mt-1 text-sm text-app-text-muted">
                 Please sign in to continue.
               </p>
             </div>
 
             <button
               onClick={continueToSignIn}
-              className="w-full rounded-lg bg-[#7fa36a] py-2 text-sm text-[#f5e8c8] hover:bg-[#91b878] cursor-pointer"
+              className="w-full rounded-lg bg-app-primary py-2 text-sm text-app-text hover:bg-app-primary-hover cursor-pointer"
             >
               Continue to Sign In
             </button>
 
             <button
               onClick={onClose}
-              className="mt-3 w-full py-2 text-xs text-[#89ad76] hover:underline"
+              className="mt-3 w-full py-2 text-xs text-app-link hover:underline"
             >
               Close
             </button>
@@ -102,13 +102,13 @@ function AuthModal({ onClose, onSubmit }) {
           <>
             {/* HEADER */}
             <div className="relative mb-4">
-              <h3 className="text-center text-lg font-bold text-[#f5e8c8]">
+              <h3 className="text-center text-lg font-bold text-app-text">
                 {mode === "signin" ? "Sign In Account" : "Create Account"}
               </h3>
 
               <button
                 onClick={onClose}
-                className="absolute right-0 top-0 rounded-lg px-3 py-2 text-sm text-[#b6c8a5] hover:text-white cursor-pointer"
+                className="absolute right-0 top-0 rounded-lg px-3 py-2 text-sm text-app-text-muted hover:text-white cursor-pointer"
               >
                 ✕
               </button>
@@ -117,7 +117,7 @@ function AuthModal({ onClose, onSubmit }) {
             {/* REGISTER FORM */}
             {mode === "register" ? (
               <>
-                <label className="mb-2 block text-sm text-[#b6c8a5]">
+                <label className="mb-2 block text-sm text-app-text-muted">
                   Username
                 </label>
 
@@ -125,10 +125,10 @@ function AuthModal({ onClose, onSubmit }) {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Username"
-                  className="mb-3 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none"
+                  className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none focus-border-app-focus" 
                 />
 
-                <label className="mb-2 block text-sm text-[#b6c8a5]">
+                <label className="mb-2 block text-sm text-app-text-muted">
                   Email (optional)
                 </label>
 
@@ -137,10 +137,10 @@ function AuthModal({ onClose, onSubmit }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
-                  className="mb-3 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none"
+                  className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none focus-border-app-focus" 
                 />
 
-                <label className="mb-2 block text-sm text-[#b6c8a5]">
+                <label className="mb-2 block text-sm text-app-text-muted">
                   Password
                 </label>
 
@@ -149,13 +149,15 @@ function AuthModal({ onClose, onSubmit }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="mb-4 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none"
+                  className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none focus-border-app-focus" 
                 />
+
+               
               </>
             ) : (
               /* SIGN IN FORM */
               <>
-                <label className="mb-2 block text-sm text-[#b6c8a5]">
+                <label className="mb-2 block text-sm text-app-text-muted">
                   Username or Email
                 </label>
 
@@ -164,10 +166,10 @@ function AuthModal({ onClose, onSubmit }) {
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="Username or Email"
-                  className="mb-3 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none"
-                />
+                  className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none focus-border-app-focus"
+                  /> 
 
-                <label className="mb-2 block text-sm text-[#b6c8a5]">
+                <label className="mb-2 block text-sm text-app-text-muted">
                   Password
                 </label>
 
@@ -176,8 +178,7 @@ function AuthModal({ onClose, onSubmit }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="mb-4 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none"
-                />
+                  className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none focus-border-app-focus" />
               </>
             )}
             {/* ERROR FIELD */}
@@ -189,17 +190,20 @@ function AuthModal({ onClose, onSubmit }) {
             {/* SUBMIT */}
             <button
               onClick={handleSubmit}
-              className="w-full rounded-lg bg-[#7fa36a] py-2 text-sm text-[#f5e8c8] hover:bg-[#91b878] cursor-pointer"
+              className="w-full rounded-lg bg-app-primary py-2 text-sm text-app-text hover:bg-app-primary-hover cursor-pointer"
             >
               {mode === "signin" ? "Sign In" : "Register"}
             </button>
 
             {/* SWITCH MODE */}
-            <div className="mt-2 flex w-full justify-center gap-1 text-xs text-[#89ad76] hover:cursor-pointer hover:underline cursor-pointer">
+            <div className="mt-2 flex w-full justify-center gap-1 text-xs text-app-primary hover:underline cursor-pointer">
               <span
                 onClick={switchMode}
+                className="cursor-pointer text-app-primary transition-colors hover:underline"
               >
-                {mode === "signin" ? "Don't have an account? Register" : "Already have an account? Sign in"}
+                {mode === "signin"
+                  ? "Don't have an account? Register"
+                  : "Already have an account? Sign in"}
               </span>
             </div>
           </>

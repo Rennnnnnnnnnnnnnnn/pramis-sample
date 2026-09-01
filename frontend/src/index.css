@@ -1,60 +1,93 @@
 @import "tailwindcss";
 
+/* =========================================
+   DEFAULT
+========================================= */
+
 body {
-  background-color: black;
+  margin: 0;
+  background-color: #142018;
 }
 
-@theme {
-  --color-app-bg: var(--app-bg);
-  --color-app-surface: var(--app-surface);
-  --color-app-card: var(--app-card);
 
-  --color-app-border: var(--app-border);
-  --color-app-border-light: var(--app-border-light);
-
-  --color-app-text: var(--app-text);
-  --color-app-text-muted: var(--app-text-muted);
-
-  --color-app-primary: var(--app-primary);
-  --color-app-primary-hover: var(--app-primary-hover);
-
-  --color-app-link: var(--app-link);
-  --color-app-danger: var(--app-danger);
-}
+/* =========================================
+   MAOMAO THEME
+========================================= */
 
 .theme-maomao {
-  --app-bg: #17221b;
+  --app-bg: #142018;
   --app-surface: #22352a;
-  --app-card: #2b4234;
+  --app-card: #1d3024;
+  --app-primary: #7fa36a;
+  --app-focus: #bbe69a;
+
+  --app-text: #f2ead8;
+  --app-text-muted: #829b7d;
 
   --app-border: #344d3b;
   --app-border-light: #49634d;
-
-  --app-text: #f5e8c8;
-  --app-text-muted: #b6c8a5;
-
-  --app-primary: #7fa36a;
-  --app-primary-hover: #91b878;
-
-  --app-link: #89ad76;
-  --app-danger: #d97878;
 }
 
 
+/* =========================================
+   JINSHI THEME
+========================================= */
+
 .theme-jinshi {
-  --app-bg: #171b2b;
-  --app-surface: #252b45;
-  --app-card: #303858;
+  --app-bg: #181421;
+  --app-surface: #29213a;
+  --app-card: #211a30;
+  --app-primary: #9b7edb;
+  --app-focus: #b99be8;
 
-  --app-border: #414a6b;
-  --app-border-light: #596486;
+  --app-text: #eee7f7;
+  --app-text-muted: #a99bbd;
 
-  --app-text: #f4ead7;
-  --app-text-muted: #bfc5df;
+  --app-border: #493b5f;
+  --app-border-light: #62527a;
+}
 
-  --app-primary: #8b9ed1;
-  --app-primary-hover: #a4b5e5;
 
-  --app-link: #9daee0;
-  --app-danger: #d97878;
+/* =========================================
+   APP COLORS
+========================================= */
+
+.bg-app-bg {
+  background-color: var(--app-bg);
+}
+
+.bg-app-surface {
+  background-color: var(--app-surface);
+}
+
+.bg-app-card {
+  background-color: var(--app-card);
+}
+
+.bg-app-primary {
+  background-color: var(--app-primary);
+}
+
+.text-app-text {
+  color: var(--app-text);
+}
+
+.text-app-primary {
+  color: var(--app-primary);
+}
+
+.text-app-text-muted {
+  color: var(--app-text-muted);
+}
+
+.border-app-border {
+  border-color: var(--app-border);
+}
+
+.border-app-border-light {
+  border-color: var(--app-border-light);
+}
+
+.focus-border-app-focus:focus {
+  border-color: var(--app-focus);
 }

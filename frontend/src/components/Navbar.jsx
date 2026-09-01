@@ -10,24 +10,24 @@ function Navbar({ user, onOpenAuth }) {
     };
 
     return (
-        <nav className="border-b border-[#344d3b] bg-maomao-night">
+        <nav className="border-b border-app-border bg-app-bg">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
                 {/* LOGO / NAME */}
                 <span
                     to="/calendar"
-                    className="text-lg font-bold tracking-wide text-[#f5e8c8]"
+                    className="text-lg font-bold tracking-wide text-app-text"
                 >
                     Pramis
                 </span>
 
                 {/* NAV LINKS */}
-                <div className="flex items-center gap-2 rounded-lg bg-[#1d3024] p-1">
+                <div className="flex items-center gap-2 rounded-lg bg-app-card p-1">
                     {/* TODAY */}
                     <Link
                         to="/"
                         className={`rounded-md px-4 py-2 text-sm font-medium transition ${location.pathname === "/"
-                            ? "bg-[#7fa36a] text-[#f5e8c8]"
-                            : "text-[#b6c8a5] hover:bg-[#263b2b] hover:text-[#f5e8c8]"
+                            ? "bg-app-primary text-app-text"
+                            : "text-app-text-muted hover:bg-app-card hover:text-app-text"
                             }`}
                     >
                         Today
@@ -36,8 +36,8 @@ function Navbar({ user, onOpenAuth }) {
                     <Link
                         to="/calendar"
                         className={`rounded-md px-4 py-2 text-sm font-medium transition ${location.pathname === "/calendar"
-                            ? "bg-[#7fa36a] text-[#f5e8c8]"
-                            : "text-[#b6c8a5] hover:bg-[#263b2b] hover:text-[#f5e8c8]"
+                            ? "bg-app-primary text-app-text"
+                            : "text-app-text-muted hover:bg-app-card hover:text-app-text"
                             }`}
                     >
                         Calendar
@@ -47,8 +47,8 @@ function Navbar({ user, onOpenAuth }) {
                         to="/profile"
                         onClick={handleProfileClick}
                         className={`rounded-md px-4 py-2 text-sm font-medium transition ${location.pathname === "/profile"
-                            ? "bg-[#7fa36a] text-[#f5e8c8]"
-                            : "text-[#b6c8a5] hover:bg-[#263b2b] hover:text-[#f5e8c8]"
+                            ? "bg-app-primary text-app-text"
+                            : "text-app-text-muted hover:bg-app-card hover:text-app-text"
                             }`}
                     >
                         Profile

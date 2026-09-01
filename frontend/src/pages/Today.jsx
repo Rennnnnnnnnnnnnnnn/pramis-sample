@@ -1,6 +1,9 @@
 import { useState } from "react";
 import useHabits from "../hooks/useHabits";
 import useTasks from "../hooks/useTasks";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 function Today({ user }) {
     // HOOKS
@@ -29,6 +32,7 @@ function Today({ user }) {
     const [newTask, setNewTask] = useState("");
     const [editingTask, setEditingTask] = useState(null);
     const [taskToDelete, setTaskToDelete] = useState(null);
+    const [editingValue, setEditingValue] = useState("");
 
     // DATE
     // =========================================================
@@ -82,6 +86,29 @@ function Today({ user }) {
         );
     });
 
+    const handleSaveTask = async (task) => {
+        const trimmedValue = editingValue.trim();
+
+        if (!trimmedValue) {
+            return;
+        }
+
+        const success = await editTask(
+            task.task_id,
+            trimmedValue
+        );
+
+        if (success) {
+            setEditingTask(null);
+            setEditingValue("");
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingTask(null);
+        setEditingValue("");
+    };
+
     const hasCompletedTasks = tasks.some(
         (task) => task.completed
     );
@@ -96,7 +123,7 @@ function Today({ user }) {
         return (
             <label
                 key={habit.habit_id}
-                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1 transition hover:bg-[#263b2b]"
+                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-1 transition hover:bg-app-card"
             >
 
                 {/* CHECKBOX */}
@@ -134,14 +161,14 @@ function Today({ user }) {
                 <div className="min-w-0 flex-1">
                     <div
                         className={`text-sm font-medium ${checked
-                            ? "text-[#829b7d] line-through"
-                            : "text-[#e8dcc2]"
+                            ? "text-app-text-muted line-through"
+                            : "text-app-text"
                             }`}
                     >
                         {habit.name}
                     </div>
 
-                    <div className="text-xs text-[#829b7d]">
+                    <div className="text-xs text-app-text-muted">
                         {habit.frequency}
                     </div>
                 </div>
@@ -152,10 +179,12 @@ function Today({ user }) {
     // =========================================================
     // TASK ROW
     const renderTask = (task) => {
+        const isEditing = editingTask === task.task_id;
+
         return (
             <div
                 key={task.task_id}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-[#263b2b]"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-app-card"
             >
 
                 {/* CHECKBOX */}
@@ -168,10 +197,11 @@ function Today({ user }) {
                         }
                         className="hidden"
                     />
+
                     <div
                         className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-all ${task.completed
-                            ? "border-[#7fa36a] bg-[#7fa36a]"
-                            : "border-[#829b7d]"
+                                ? "border-[#7fa36a] bg-app-primary"
+                                : "border-[#829b7d]"
                             }`}
                     >
                         {task.completed && (
@@ -183,100 +213,124 @@ function Today({ user }) {
                 </label>
 
                 {/* TASK NAME */}
-                {editingTask === task.task_id ? (
+                {isEditing ? (
                     <input
                         type="text"
-                        defaultValue={task.task_name}
+                        value={editingValue}
+                        onChange={(e) =>
+                            setEditingValue(e.target.value)
+                        }
                         autoFocus
-                        onKeyDown={async (e) => {
-
+                        onKeyDown={(e) => {
                             if (e.key === "Enter") {
-
-                                const success = await editTask(
-                                    task.task_id,
-                                    e.target.value
-                                );
-
-                                if (success) {
-                                    setEditingTask(null);
-                                }
+                                handleSaveTask(task);
                             }
 
                             if (e.key === "Escape") {
-                                setEditingTask(null);
+                                handleCancelEdit();
                             }
                         }}
-                        className="min-w-0 flex-1 rounded border border-[#49634d] bg-[#2b4234] px-2 text-sm text-[#f5e8c8] outline-none"
+                        className="min-w-0 flex-1 rounded border border-app-border-light bg-[#2b4234] px-2 py-1 text-sm text-app-text outline-none focus:border-app-focus"
                     />
-
                 ) : (
                     <div
                         className={`min-w-0 flex-1 text-sm ${task.completed
-                            ? "text-[#829b7d] line-through"
-                            : "text-[#e8dcc2]"
+                                ? "text-app-text-muted line-through"
+                                : "text-app-text"
                             }`}
                     >
                         {task.task_name}
                     </div>
                 )}
 
-                {/* EDIT / DELETE */}
-                <div className="flex shrink-0 gap-1">
-                    <button
-                        onClick={() =>
-                            setEditingTask(task.task_id)
-                        }
-                        className="cursor-pointer rounded px-1 text-blue-400 hover:text-blue-300"
-                    >
-                        ✏️
-                    </button>
+                {/* ACTION BUTTONS */}
+                <div className="flex shrink-0 gap-2">
 
-                    <button
-                        onClick={() =>
-                            setTaskToDelete(task)
-                        }
-                        className="cursor-pointer rounded px-1 text-red-400 hover:text-red-300"
-                    >
-                        🗑
-                    </button>
+                    {isEditing ? (
+                        <>
+                            {/* SAVE */}
+                            <button
+                                onClick={() =>
+                                    handleSaveTask(task)
+                                }
+                                className="cursor-pointer rounded-md bg-app-primary px-3 py-1 text-xs font-medium text-app-text transition hover:bg-app-primary-hover"
+                            >
+                                Save
+                            </button>
+
+                            {/* CANCEL */}
+                            <button
+                                onClick={handleCancelEdit}
+                                className="cursor-pointer rounded-md border border-app-border-light px-3 py-1 text-xs font-medium text-app-text-muted transition hover:bg-app-card hover:text-app-text"
+                            >
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            {/* EDIT */}
+                            <button
+                                onClick={() => {
+                                    setEditingTask(task.task_id);
+                                    setEditingValue(task.task_name);
+                                }}
+                                className="cursor-pointer rounded p-1 text-gray-400 transition hover:text-gray-300"
+                                title="Edit task"
+                            >
+                                <EditIcon sx={{ fontSize: 22 }} />
+                            </button>
+
+                            {/* DELETE */}
+                            <button
+                                onClick={() =>
+                                    setTaskToDelete(task)
+                                }
+                                className="cursor-pointer rounded p-1 text-gray-400 transition hover:text-gray-300"
+                                title="Delete task"
+                            >
+                                <DeleteIcon sx={{ fontSize: 22 }} />
+                            </button>
+                        </>
+                    )}
+
                 </div>
             </div>
         );
     };
 
     return (
-        <div className="min-h-full bg-maomao-night p-3 text-[#f2ead8] sm:p-5 lg:p-8">
-            <div className="rounded-xl border border-maomao-dark-border bg-maomao-forest p-6 shadow-lg">
+        <div className="min-h-full bg-app-bg p-3 text-app-text sm:p-5 lg:p-8">
+            <div className="rounded-xl border border-app-border bg-app-surface p-6 shadow-lg">
                 {/* HEADER */}
-                <div className="mb-4 rounded-xl border border-[#344d3b] bg-[#1d3024] p-4">
+                <div className="mb-4 rounded-xl border border-app-border bg-app-card p-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="mb-1 text-xl font-bold text-[#f5e8c8]">
+                            <h1 className="mb-1 text-xl font-bold text-app-text">
                                 Today's Progress
                             </h1>
 
-                            <p className="text-sm text-[#829b7d]">
+                            <p className="text-sm text-app-text-muted">
                                 {currentMonth} {currentDay},{" "}
                                 {currentYear} -{" "}
                                 {getWeekday(currentDay)}
                             </p>
                         </div>
 
-                        <div className="text-sm text-[#b6c8a5]">
+                        <div className="text-sm text-app-text-muted">
                             {completedToday}/{todayHabits.length}
                         </div>
                     </div>
                 </div>
 
                 {/* TABS */}
-                <div className="mb-4 flex rounded-lg bg-[#1d3024]">
+                <div className="mb-4 flex rounded-lg bg-app-card">
                     <button
                         onClick={() =>
                             setActiveTab("today")
                         }
                         className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition cursor-pointer ${activeTab === "today"
-                            ? "bg-[#7fa36a] text-[#f5e8c8]"
-                            : "text-[#b6c8a5] hover:bg-[#263b2b]"
+                            ? "bg-app-primary text-app-text"
+                            : "text-app-text-muted hover:bg-app-card"
                             }`}
                     >
                         Today
@@ -290,8 +344,8 @@ function Today({ user }) {
                             setActiveTab("completed")
                         }
                         className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition cursor-pointer ${activeTab === "completed"
-                            ? "bg-[#7fa36a] text-[#f5e8c8]"
-                            : "text-[#b6c8a5] hover:bg-[#263b2b]"
+                            ? "bg-app-primary text-app-text"
+                            : "text-app-text-muted hover:bg-app-card"
                             }`}
                     >
                         Completed
@@ -304,7 +358,7 @@ function Today({ user }) {
                 {/* PROMISES */}
                 {habitsLoading || logsLoading ? (
                     <div className="py-10 text-center">
-                        <p className="text-sm text-[#829b7d]">
+                        <p className="text-sm text-app-text-muted">
                             Loading . . .
                         </p>
                     </div>
@@ -319,7 +373,7 @@ function Today({ user }) {
 
                                 {incompleteHabits.length === 0 && (
                                     <div className="py-10 text-center">
-                                        <p className="text-sm text-[#829b7d]">
+                                        <p className="text-sm text-app-text-muted">
                                             {todayHabits.length === 0 ? "No activities scheduled for today." : "All promises completed!"}
                                         </p>
                                     </div>
@@ -336,7 +390,7 @@ function Today({ user }) {
 
                                 {completedHabits.length === 0 && (
                                     <div className="py-10 text-center">
-                                        <p className="text-sm text-[#829b7d]">
+                                        <p className="text-sm text-app-text-muted">
                                             No completed promises yet.
                                         </p>
                                     </div>
@@ -347,10 +401,10 @@ function Today({ user }) {
                 )}
 
                 {/* TASKS */}
-                <div className="mt-6 border-t border-[#344d3b] pt-4">
+                <div className="mt-6 border-t border-app-border pt-4">
                     {/* TASK HEADER */}
                     <div className="mb-3 flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-[#f5e8c8]">
+                        <h3 className="text-sm font-semibold text-app-text">
                             Tasks
                         </h3>
 
@@ -383,7 +437,7 @@ function Today({ user }) {
 
                             }}
                             placeholder="Add a task..."
-                            className="flex-1 rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none placeholder:text-[#829b7d] focus:border-[#7fa36a]"
+                            className="flex-1 rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none placeholder:text-app-text-muted focus-border-app-focus"
                         />
 
                         <button
@@ -391,7 +445,7 @@ function Today({ user }) {
                                 addTask(newTask);
                                 setNewTask("");
                             }}
-                            className="cursor-pointer rounded-md bg-[#7fa36a] px-4 py-1 text-xs text-[#f5e8c8] hover:bg-[#91b878]"
+                            className="cursor-pointer rounded-md bg-app-primary px-4 py-1 text-xs text-app-text hover:bg-app-primary-hover"
                         >
                             + Add
                         </button>
@@ -400,11 +454,11 @@ function Today({ user }) {
                     {/* TASK LIST */}
                     <div className="space-y-1">
                         {tasksLoading ? (
-                            <p className="py-4 text-center text-sm text-[#829b7d]">
+                            <p className="py-4 text-center text-sm text-app-text-muted">
                                 Loading...
                             </p>
                         ) : tasks.length === 0 ? (
-                            <p className="py-4 text-center text-sm text-[#829b7d]">
+                            <p className="py-4 text-center text-sm text-app-text-muted">
                                 No tasks
                             </p>
                         ) : (
@@ -417,14 +471,14 @@ function Today({ user }) {
             {/*  DELETE TASK MODAL */}
             {taskToDelete && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
-                    <div className="w-80 rounded-xl border border-[#344d3b] bg-maomao-forest p-6 shadow-2xl">
-                        <h3 className="mb-3 text-lg font-bold text-[#f5e8c8]">
+                    <div className="w-80 rounded-xl border border-app-border bg-maomao-forest p-6 shadow-2xl">
+                        <h3 className="mb-3 text-lg font-bold text-app-text">
                             Delete Task
                         </h3>
 
-                        <p className="mb-6 text-sm text-[#b6c8a5]">
+                        <p className="mb-6 text-sm text-app-text-muted">
                             Are you sure you want to delete{" "}
-                            <span className="font-semibold text-[#f5e8c8]">
+                            <span className="font-semibold text-app-text">
                                 "{taskToDelete.task_name}"
                             </span>
                             ?
@@ -436,7 +490,7 @@ function Today({ user }) {
                                 onClick={() =>
                                     setTaskToDelete(null)
                                 }
-                                className="rounded-lg border border-gray-400 px-4 py-2 text-sm text-[#b6c8a5] hover:text-[#f5e8c8]"
+                                className="rounded-lg border border-gray-400 px-4 py-2 text-sm text-app-text-muted hover:text-app-text"
                             >
                                 Cancel
                             </button>

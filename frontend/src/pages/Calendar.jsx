@@ -101,10 +101,7 @@ function Calendar({ user }) {
 
     const today = new Date();
 
-    const currentMonth = today.toLocaleString("default", {
-        month: "long",
-    });
-
+    const currentMonth = today.toLocaleString("default", { month: "long", });
     const currentDay = today.getDate();
 
     const daysInMonth = new Date(
@@ -133,7 +130,6 @@ function Calendar({ user }) {
             weekday: "short",
         });
     };
-
 
     const shouldShowDay = (habit, day) => {
         const date = new Date(
@@ -164,7 +160,6 @@ function Calendar({ user }) {
         ).length;
     };
 
-
     const getCompletedCount = (habit) => {
         return days.filter(
             (day) => completed[`${habit.habit_id}-${day}`]
@@ -188,11 +183,11 @@ function Calendar({ user }) {
     }, [user, habitsLoading, daysInMonth]);
 
     return (
-        <div className="min-h-full bg-maomao-night p-3 sm:p-5 lg:p-8 text-[#f2ead8]">
-            <div className="rounded-xl border border-maomao-dark-border bg-maomao-forest p-6 shadow-lg">
+        <div className="min-h-full bg-app-bg p-3 sm:p-5 lg:p-8 text-app-text">
+            <div className="rounded-xl border border-app-border bg-app-surface p-6 shadow-lg"            >
                 {/* HEADER */}
                 <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-[#f5e8c8]">
+                    <h1 className="text-xl font-bold text-app-text">
                         {currentMonth}
                     </h1>
                 </div>
@@ -201,7 +196,7 @@ function Calendar({ user }) {
                     {/* PROMISES SIDEBAR */}
                     <div className="w-full space-y-3 lg:w-auto lg:shrink-0">
                         <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-[#f5e8c8]">
+                            <h3 className="font-semibold text-app-text">
                                 Promises
                             </h3>
 
@@ -213,7 +208,7 @@ function Calendar({ user }) {
                                     setColor(getRandomColor());
                                     setShowModal(true);
                                 }}
-                                className="rounded-md bg-[#7fa36a] px-2 py-1.5 text-xs text-[#f5e8c8] hover:bg-[#91b878]"
+                                className="rounded-md bg-app-primary px-2 py-1.5 text-xs text-app-text hover:bg-app-primary-hover cursor-pointer"
                             >
                                 + New
                             </button>
@@ -237,7 +232,6 @@ function Calendar({ user }) {
                                         />
                                     ))}
                                 </div>
-
                             </SortableContext>
                         </DndContext>
                     </div>
@@ -264,14 +258,14 @@ function Calendar({ user }) {
                                     }
                                     className="flex flex-col items-center justify-center"
                                 >
-                                    <span className="text-[10px] text-[#829b7d]">
+                                    <span className="text-[10px] text-app-text-muted">
                                         {getWeekday(day)}
                                     </span>
 
                                     <span
                                         className={`text-xs ${day === currentDay
                                             ? "font-extrabold text-[#9fcf8b]"
-                                            : "text-[#829b7d]"
+                                            : "text-app-text-muted"
                                             }`}
                                     >
                                         {day}
@@ -279,7 +273,7 @@ function Calendar({ user }) {
                                 </div>
                             ))}
 
-                            <div className="text-right text-xs text-[#829b7d]">
+                            <div className="text-right text-xs text-app-text-muted">
                                 Done
                             </div>
                         </div>
@@ -319,7 +313,7 @@ function Calendar({ user }) {
                                                 />
                                                 <div
                                                     className={`h-6 w-6 rounded-full border transition-all ${day > currentDay
-                                                        ? "bg-maomao-night opacity-40"
+                                                        ? "bg-app-bg opacity-40"
                                                         : "cursor-pointer"
                                                         }`}
                                                     style={{
@@ -339,7 +333,7 @@ function Calendar({ user }) {
                                         );
                                     })}
                                     {/* COMPLETED COUNT */}
-                                    <div className="text-right text-sm text-[#b6c8a5]">
+                                    <div className="text-right text-sm text-app-text-muted">
                                         {getCompletedCount(habit)}                                        /                                        {getTotalDays(habit)}
                                     </div>
                                 </div>
@@ -350,13 +344,13 @@ function Calendar({ user }) {
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-                    <div className="mt-6 w-80 rounded-xl border border-[#344d3b] bg-black/50 p-4 shadow-xl">
-                        <h3 className="mb-3 text-center text-sm font-bold text-[#f5e8c8]">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
+                    <div className="mt-6 w-80 rounded-xl border border-app-border bg-app-card  bg-black/50 p-4 shadow-xl">
+                        <h3 className="mb-3 text-center text-sm font-bold text-app-text">
                             {editingHabit ? "Edit Promise" : "New Promise"}
                         </h3>
                         {/* NAME */}
-                        <label className="mb-2 block text-sm text-[#b6c8a5]">
+                        <label className="mb-2 block text-sm text-app-text-muted">
                             Promise Name
                         </label>
 
@@ -365,19 +359,19 @@ function Calendar({ user }) {
                             value={newHabit}
                             onChange={(e) => setNewHabit(e.target.value)}
                             placeholder="Promise name..."
-                            className="mb-3 w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none hover:border-[#89ad76] focus:border-green-500"
+                            className="mb-3 w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none hover:border-[#89ad76] focus:border-green-500 focus-border-app-focus"
                             autoFocus
                         />
                         {/* FREQUENCY */}
                         <div className="mb-4">
-                            <label className="mb-2 block text-sm text-[#b6c8a5]">
+                            <label className="mb-2 block text-sm text-app-text-muted">
                                 Frequency
                             </label>
 
                             <select
                                 value={frequency}
                                 onChange={(e) => setFrequency(e.target.value)}
-                                className="w-full rounded-lg border border-[#49634d] bg-[#2b4234] px-3 py-2 text-sm text-[#f5e8c8] outline-none hover:border-[#89ad76] focus:border-green-500"
+                                className="w-full rounded-lg border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none hover:border-[#89ad76] focus:border-green-500 focus-border-app-focus"
                             >
                                 <option value="daily">Daily</option>
                                 <option value="weekdays">Weekdays</option>
@@ -388,7 +382,7 @@ function Calendar({ user }) {
 
                         {/* COLOR */}
                         <div className="mb-4 flex items-center gap-3">
-                            <label className="text-sm text-[#b6c8a5]">
+                            <label className="text-sm text-app-text-muted">
                                 Color
                             </label>
 
@@ -405,7 +399,7 @@ function Calendar({ user }) {
 
                             <button
                                 onClick={closeModal}
-                                className="rounded-lg px-3 py-1.5 text-sm text-[#b6c8a5] hover:text-[#f5e8c8]"
+                                className="rounded-lg px-3 py-1.5 text-sm text-app-text-muted hover:text-app-text"
                             >
                                 Cancel
                             </button>
@@ -416,7 +410,7 @@ function Calendar({ user }) {
                                         ? handleEditSave
                                         : handleAddHabit
                                 }
-                                className="rounded-lg bg-[#7fa36a] px-3 py-1.5 text-sm font-semibold text-[#f5e8c8] hover:bg-[#91b878]"
+                                className="rounded-lg bg-app-primary px-3 py-1.5 text-sm font-semibold text-app-text hover:bg-app-primary-hover"
                             >
                                 {editingHabit ? "Save" : "Add"}
                             </button>
@@ -428,16 +422,15 @@ function Calendar({ user }) {
             )}
 
             {habitToDelete && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/60">
-                    <div className="w-80 rounded-xl border border-[#344d3b] bg-maomao-forest p-6 shadow-2xl">
-
-                        <h3 className="mb-3 text-lg font-bold text-[#f5e8c8]">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-xs">
+                    <div className="w-80 rounded-xl border border-app-border bg-app-surface p-6 shadow-2xl">
+                        <h3 className="mb-3 text-lg font-bold text-app-text">
                             Delete Promise
                         </h3>
 
-                        <p className="mb-6 text-sm text-[#b6c8a5]">
+                        <p className="mb-6 text-sm text-app-text-muted">
                             Are you sure you want to delete{" "}
-                            <span className="font-semibold text-[#f5e8c8]">
+                            <span className="font-semibold text-app-text">
                                 "{habitToDelete.name}"
                             </span>
                             ?
@@ -449,7 +442,7 @@ function Calendar({ user }) {
 
                             <button
                                 onClick={() => setHabitToDelete(null)}
-                                className="rounded-lg px-4 py-2 text-sm text-[#b6c8a5] hover:text-[#f5e8c8] border border-gray-400 cursor-pointer"
+                                className="rounded-lg border border-app-border-light px-4 py-2 text-sm text-app-text-muted hover:text-app-text cursor-pointer"
                             >
                                 Cancel
                             </button>
@@ -462,9 +455,7 @@ function Calendar({ user }) {
                             </button>
 
                         </div>
-
                     </div>
-
                 </div>
             )}
         </div>

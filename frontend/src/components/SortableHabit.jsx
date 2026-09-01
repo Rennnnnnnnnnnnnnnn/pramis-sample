@@ -1,5 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function SortableHabit({
     habit,
@@ -47,11 +49,11 @@ function SortableHabit({
             {/* HABIT INFO */}
             <div className="flex min-w-0 flex-1 items-center gap-2">
                 <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-[#e8dcc2]">
+                    <div className="truncate text-sm font-medium text-app-text">
                         {habit.name}
                     </div>
 
-                    <div className="text-xs text-[#829b7d]">
+                    <div className="text-xs text-app-text-muted">
                         {habit.frequency}
                     </div>
                 </div>
@@ -59,20 +61,19 @@ function SortableHabit({
             </div>
 
             {/* EDIT / DELETE */}
-            <div className="flex shrink-0 gap-1">
-
+            <div className="flex shrink-0 gap-2">
                 <button
                     onClick={() => onEdit(habit)}
-                    className="rounded px-1 text-blue-400 hover:text-blue-300"
+                    className="rounded px-1 text-gray-400 hover:text-gray-300 cursor-pointer"
                 >
-                    ✏️
+                    <EditIcon sx={{ fontSize: 22 }} />
                 </button>
 
                 <button
                     onClick={() => onDelete(habit)}
-                    className="rounded px-1 text-red-400 hover:text-red-300"
+                    className="rounded px-1 text-gray-400 hover:text-gray-300 cursor-pointer"
                 >
-                    🗑
+                    <DeleteIcon sx={{ fontSize: 22 }} />
                 </button>
 
             </div>

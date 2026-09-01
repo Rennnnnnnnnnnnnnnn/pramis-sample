@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const ThemeContext = createContext();
 
@@ -7,12 +7,9 @@ export function ThemeProvider({ children }) {
         localStorage.getItem("theme") || "maomao"
     );
 
-    useEffect(() => {
-        localStorage.setItem("theme", theme);
-    }, [theme]);
-
     const switchTheme = (newTheme) => {
         setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
     };
 
     return (

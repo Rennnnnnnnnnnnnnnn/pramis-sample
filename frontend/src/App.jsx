@@ -6,7 +6,6 @@ import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import AuthModal from "./components/AuthModal";
 import api from "./services/api";
-import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -87,8 +86,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-maomao-night">
-        <div className="p-5 text-center text-md font-medium italic tracking-wide text-[#b6c8a5]">
+      <div className="min-h-screen bg-app-bg">
+        <div className="p-5 text-center text-md font-medium italic tracking-wide text-app-text-muted">
           <span>
             KEEP YOUR PROMISES.
           </span>

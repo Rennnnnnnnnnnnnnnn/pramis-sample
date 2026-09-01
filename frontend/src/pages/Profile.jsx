@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import api from "../services/api";
 import { useProfile } from "../hooks/useProfile";
+import { useTheme } from "../context/ThemeContext";
+import api from "../services/api";
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -17,12 +18,13 @@ function Profile() {
         updateUsername,
         updateEmail,
         updatePassword,
+        deleteAccount,
         savingUsername,
         savingEmail,
         savingPassword,
-        deleteAccount,
     } = useProfile();
 
+    const { theme, switchTheme } = useTheme();
     const [editingUsername, setEditingUsername] = useState(false);
     const [editingEmail, setEditingEmail] = useState(false);
     const [username, setUsername] = useState("");
@@ -30,12 +32,12 @@ function Profile() {
 
     const handlePasswordUpdate = async () => {
         if (!oldPassword || !newPassword || !confirmPassword) {
-            alert("Please fill in all password fields.");
+            console.log("Please fill in all password fields.");
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            alert("Passwords do not match.");
+            console.log("Passwords do not match.");
             return;
         }
 
@@ -120,73 +122,80 @@ function Profile() {
     };
 
     return (
-        <div className="min-h-full bg-maomao-night p-3 text-[#f2ead8] sm:p-5 lg:p-8">
-            <div className="mx-auto max-w-2xl rounded-xl border border-maomao-dark-border bg-maomao-forest p-6 shadow-lg">
+        <div className="min-h-full bg-app-bg p-3 text-[#f2ead8] sm:p-5 lg:p-8">
+            <div className="mx-auto max-w-2xl rounded-xl border border-app-border bg-app-surface p-6 shadow-lg">
                 {/* HEADER */}
                 <div className="mb-6 text-center mb-5">
-                    <h1 className="text-xl font-bold text-[#f5e8c8]">
+                    <h1 className="text-xl font-bold text-app-text">
                         Profile
                     </h1>
 
-                    <p className="mt-1 text-sm text-[#829b7d]">
+                    <p className="mt-1 text-sm text-app-text-muted">
                         Manage your account and preferences
                     </p>
                 </div>
 
                 <div className="mt-6">
-                    <h2 className="mb-1 text-sm font-semibold text-[#f5e8c8]">
-                        Appearance
-                    </h2>
-
-                    <p className="mb-4 text-xs text-[#829b7d]">
-                        Customize how the application looks.
-                    </p>
-
                     {/* THEME */}
-                    <div className="rounded-lg bg-[#1d3024] px-4 py-4">
+                    <div className="rounded-lg bg-app-card px-4 py-4">
                         <div className="mb-3">
-                            <span className="text-sm font-medium text-[#e8dcc2]">
+                            <span className="text-sm font-medium text-app-text">
                                 Theme
                             </span>
 
-                            <p className="text-xs text-[#829b7d]">
+                            <p className="text-xs text-app-text-muted">
                                 Choose your preferred visual theme.
                             </p>
                         </div>
-
-
                         {/* THEME OPTIONS */}
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <div className="flex gap-2 ">
                             {/* MAOMAO */}
                             <button
-                                className="rounded-lg border border-[#344d3b] bg-[#263b2b] px-3 py-3 text-left transition hover:border-[#7fa36a] hover:bg-[#344d3b] cursor-pointer"
+                                onClick={() => switchTheme("maomao")}
+                                className={`
+                                        rounded-lg w-full border px-3 py-3 text-left transition cursor-pointer
+                                        ${theme === "maomao"
+                                        ? "border-app-primary bg-app-card"
+                                        : "border-app-border bg-app-surface"
+                                    }
+                                        hover:border-app-primary
+                                    `}
                             >
                                 <div className="mb-2 flex items-center gap-2">
-                                    <div className="h-4 w-4 rounded-full border border-[#7fa36a] bg-[#7fa36a]" />
-                                    <span className="text-sm font-medium text-[#f5e8c8]">
+                                    <div className="h-4 w-4 rounded-full bg-[#7fa36a]" />
+
+                                    <span className="text-sm font-medium text-app-text">
                                         Maomao
                                     </span>
                                 </div>
 
-                                <p className="text-xs text-[#829b7d]">
+                                <p className="text-xs text-app-text-muted">
                                     Herbal green theme
                                 </p>
                             </button>
                             {/* JINSHI */}
                             <button
-                                className="rounded-lg border border-[#344d3b] bg-[#263b2b] px-3 py-3 text-left transition hover:border-[#9b7edb] hover:bg-[#344d3b] cursor-pointer"
+                                onClick={() => switchTheme("jinshi")}
+                                className={`
+                                        rounded-lg w-full border px-3 py-3 text-left transition cursor-pointer
+                                        ${theme === "jinshi"
+                                        ? "border-app-primary bg-app-card"
+                                        : "border-app-border bg-app-surface"
+                                    }
+                                            hover:border-app-primary
+                                        `}
                             >
                                 <div className="mb-2 flex items-center gap-2">
-                                    <div className="h-4 w-4 rounded-full border border-[#9b7edb] bg-[#9b7edb]" />
-                                    <span className="text-sm font-medium text-[#f5e8c8]">
+                                    <div className="h-4 w-4 rounded-full bg-[#9b7edb]" />
+
+                                    <span className="text-sm font-medium text-app-text">
                                         Jinshi
                                     </span>
                                 </div>
 
-                                <p className="text-xs text-[#829b7d]">
+                                <p className="text-xs text-app-text-muted">
                                     Elegant violet theme
                                 </p>
-
                             </button>
 
                         </div>
@@ -201,22 +210,22 @@ function Profile() {
                 ================================================= */}
 
                 <div className="mt-6">
-                    <h2 className="mb-1 text-sm font-semibold text-[#f5e8c8]">
+                    <h2 className="mb-1 text-sm font-semibold text-app-text">
                         Account Information
                     </h2>
 
-                    <p className="mb-4 text-xs text-[#829b7d]">
+                    <p className="mb-4 text-xs text-app-text-muted">
                         Manage your account details.
                     </p>
                     <div className="space-y-3">
                         {/* USERNAME */}
-                        <div className="flex items-center justify-between rounded-lg bg-[#1d3024] px-4 py-3">
-                            <span className="text-sm text-[#829b7d] mr-2">
+                        <div className="flex items-center justify-between rounded-lg bg-app-card px-4 py-3">
+                            <span className="text-sm text-app-text-muted mr-2">
                                 Username
                             </span>
                             {!editingUsername ? (
                                 <div className="flex items-center gap-3">
-                                    <span className="text-sm text-[#e8dcc2]">
+                                    <span className="text-sm text-app-text">
                                         {user?.username}
                                     </span>
 
@@ -225,7 +234,7 @@ function Profile() {
                                             setUsername(user?.username || "");
                                             setEditingUsername(true);
                                         }}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:border-[#7fa36a] hover:text-[#f5e8c8] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:border-app-primary hover:text-app-text cursor-pointer"
                                     >
                                         Edit
                                     </button>
@@ -236,14 +245,14 @@ function Profile() {
                                         type="text"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        className="w-full rounded-md border border-[#49634d] bg-[#263b2b] p-1 text-sm text-[#e8dcc2] outline-none focus:border-[#7fa36a]"
+                                        className="w-full rounded-md border border-app-border-light bg-app-card p-1 text-sm text-app-text outline-none  focus-border-app-focus"
                                         maxLength={50}
                                     />
 
                                     <button
                                         onClick={handleUsernameUpdate}
                                         disabled={savingUsername}
-                                        className="rounded-md bg-[#7fa36a] px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:opacity-50 cursor-pointer"
+                                        className="rounded-md bg-app-primary px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:opacity-50 cursor-pointer"
                                     >
                                         {savingUsername ? "Saving..." : "Save"}
                                     </button>
@@ -254,7 +263,7 @@ function Profile() {
                                             setEditingUsername(false);
                                         }}
                                         disabled={savingUsername}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:text-[#f5e8c8] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:text-app-text cursor-pointer"
                                     >
                                         Cancel
                                     </button>
@@ -262,8 +271,8 @@ function Profile() {
                             )}
                         </div>
                         {/* EMAIL */}
-                        <div className="flex items-center justify-between rounded-lg bg-[#1d3024] px-4 py-3">
-                            <span className="mr-2 text-sm text-[#829b7d]">
+                        <div className="flex items-center justify-between rounded-lg bg-app-card px-4 py-3">
+                            <span className="mr-2 text-sm text-app-text-muted">
                                 Email
                             </span>
 
@@ -272,7 +281,7 @@ function Profile() {
                                     <span
                                         className={`truncate text-sm 
                                             ${user?.email
-                                                ? "text-[#e8dcc2]"
+                                                ? "text-app-text"
                                                 : "text-[#526557]"
                                             }`}
                                     >
@@ -284,7 +293,7 @@ function Profile() {
                                             setEmail(user?.email || "");
                                             setEditingEmail(true);
                                         }}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:border-[#7fa36a] hover:text-[#f5e8c8] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:border-app-primary hover:text-app-text cursor-pointer"
                                     >
                                         Edit
                                     </button>
@@ -297,13 +306,13 @@ function Profile() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="Enter your email"
-                                        className="w-full rounded-md border border-[#49634d] bg-[#263b2b] p-1 text-sm text-[#e8dcc2] outline-none placeholder:text-[#526557] focus:border-[#7fa36a]"
+                                        className="w-full rounded-md border border-app-border-light bg-app-card p-1 text-sm text-app-text outline-none placeholder:text-[#526557] focus-border-app-focus"
                                     />
 
                                     <button
                                         onClick={handleEmailUpdate}
                                         disabled={savingEmail}
-                                        className="rounded-md bg-[#7fa36a] px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:opacity-50"
+                                        className="rounded-md bg-app-primary px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:opacity-50"
                                     >
                                         {savingEmail ? "Saving..." : "Save"}
                                     </button>
@@ -314,7 +323,7 @@ function Profile() {
                                             setEditingEmail(false);
                                         }}
                                         disabled={savingEmail}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:text-[#f5e8c8] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:text-app-text cursor-pointer"
                                     >
                                         Cancel
                                     </button>
@@ -323,18 +332,18 @@ function Profile() {
 
                         </div>
                         {/* PASSWORD */}
-                        <div className="rounded-lg bg-[#1d3024] px-4 py-3">
+                        <div className="rounded-lg bg-app-card px-4 py-3">
                             {!editingPassword ? (
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <span className="text-sm text-[#829b7d]">
+                                        <span className="text-sm text-app-text-muted">
                                             Password
                                         </span>
                                     </div>
 
                                     <button
                                         onClick={() => setEditingPassword(true)}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:border-[#7fa36a] hover:text-[#f5e8c8] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:border-app-primary hover:text-app-text cursor-pointer"
                                     >
                                         Change
                                     </button>
@@ -343,7 +352,7 @@ function Profile() {
                                 <div className="flex flex-col gap-4">
                                     {/* CURRENT PASSWORD */}
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-xs text-[#829b7d]">
+                                        <label className="text-xs text-app-text-muted">
                                             Current Password
                                         </label>
 
@@ -352,12 +361,12 @@ function Profile() {
                                             placeholder="••••••••"
                                             value={oldPassword}
                                             onChange={(e) => setOldPassword(e.target.value)}
-                                            className="rounded-md border border-[#49634d] bg-[#263b2b] px-3 py-2 text-sm text-[#e8dcc2] outline-none placeholder:text-[#526557] focus:border-[#7fa36a]"
+                                            className="rounded-md border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none placeholder:text-app-text focus-border-app-focus"
                                         />
                                     </div>
                                     {/* NEW PASSWORD */}
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-xs text-[#829b7d]">
+                                        <label className="text-xs text-app-text-muted">
                                             New Password
                                         </label>
 
@@ -366,12 +375,12 @@ function Profile() {
                                             placeholder="••••••••"
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
-                                            className="rounded-md border border-[#49634d] bg-[#263b2b] px-3 py-2 text-sm text-[#e8dcc2] outline-none placeholder:text-[#526557] focus:border-[#7fa36a]"
+                                            className="rounded-md border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none placeholder:text-app-text focus-border-app-focus"
                                         />
                                     </div>
                                     {/* CONFIRM PASSWORD */}
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-xs text-[#829b7d]">
+                                        <label className="text-xs text-app-text-muted">
                                             Re-enter New Password
                                         </label>
 
@@ -380,7 +389,7 @@ function Profile() {
                                             placeholder="••••••••"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
-                                            className="rounded-md border border-[#49634d] bg-[#263b2b] px-3 py-2 text-sm text-[#e8dcc2] outline-none placeholder:text-[#526557] focus:border-[#7fa36a]"
+                                            className="rounded-md border border-app-border-light bg-app-card px-3 py-2 text-sm text-app-text outline-none placeholder:text-app-text focus-border-app-focus"
                                         />
                                         {confirmPassword &&
                                             newPassword !== confirmPassword && (
@@ -399,7 +408,7 @@ function Profile() {
                                                 setEditingPassword(false);
                                             }}
                                             disabled={savingPassword}
-                                            className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] transition hover:text-[#f5e8c8] cursor-pointer"
+                                            className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted transition hover:text-app-text cursor-pointer"
                                         >
                                             Cancel
                                         </button>
@@ -413,7 +422,7 @@ function Profile() {
                                                 !confirmPassword ||
                                                 newPassword !== confirmPassword
                                             }
-                                            className="rounded-md bg-[#7fa36a] px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                                            className="rounded-md bg-app-primary px-3 py-1.5 text-xs font-semibold text-[#142018] transition hover:bg-[#91b87a] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                                         >
                                             {savingPassword ? "Saving..." : "Save"}
                                         </button>
@@ -427,12 +436,12 @@ function Profile() {
                 {/* =================================================
                     DANGER ZONE
                 ================================================= */}
-                <div className="mt-8 border-t border-[#344d3b] pt-6">
-                    <h2 className="mb-1 text-sm font-semibold text-[#f5e8c8]">
+                <div className="mt-8 border-t border-app-border pt-6">
+                    <h2 className="mb-1 text-sm font-semibold text-app-text">
                         Account Actions
                     </h2>
 
-                    <p className="mb-4 text-xs text-[#829b7d]">
+                    <p className="mb-4 text-xs text-app-text-muted">
                         Manage your account session and data.
                     </p>
 
@@ -440,7 +449,7 @@ function Profile() {
                         {/* LOG OUT */}
                         <button
                             onClick={handleLogout}
-                            className="rounded-lg border border-[#49634d] px-4 py-2 text-sm font-semibold text-[#b6c8a5] transition hover:border-[#7fa36a] hover:bg-[#263b2b] hover:text-[#f5e8c8] cursor-pointer"
+                            className="rounded-lg border border-app-border-light px-4 py-2 text-sm font-semibold text-app-text-muted transition hover:border-app-primary hover:bg-app-card hover:text-app-text cursor-pointer"
                         >
                             Log out
                         </button>
@@ -464,7 +473,7 @@ function Profile() {
                                     autoFocus
                                     value={deletePassword}
                                     onChange={(e) => setDeletePassword(e.target.value)}
-                                    className={`mb-3 w-full rounded-md border border-red-900/50  px-3 py-2 text-sm text-[#e8dcc2] outline-none focus:border-red-500 ${deletingAccount ? "bg-red-900/20" : "bg-[#1d3024]"}`}
+                                    className={`mb-3 w-full rounded-md border border-red-900/50  px-3 py-2 text-sm text-app-text outline-none focus:border-red-500 ${deletingAccount ? "bg-red-900/20" : "bg-app-card"}`}
                                 />
 
                                 <div className="flex justify-end gap-2">
@@ -474,7 +483,7 @@ function Profile() {
                                             setDeletingAccount(false);
                                         }}
                                         disabled={deleting}
-                                        className="rounded-md border border-[#49634d] px-3 py-1.5 text-xs text-[#b6c8a5] cursor-pointer"
+                                        className="rounded-md border border-app-border-light px-3 py-1.5 text-xs text-app-text-muted cursor-pointer"
                                     >
                                         Cancel
                                     </button>
